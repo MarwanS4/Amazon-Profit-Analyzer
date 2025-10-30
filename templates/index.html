@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euro Lotus → Amazon Profit Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📊 Euro Lotus → Amazon Profit Analyzer</h1>
+        <p>Analyzing CSV from uploads folder</p>
+    </div>
+
+    <div class="settings">
+        <h3>⚙️ Settings & Costs</h3>
+        <div class="settings-grid">
+            <div class="setting-item">
+                <label>Shipping Cost (€)</label>
+                <input type="number" id="shippingCost" value="3.5" step="0.1" min="0">
+            </div>
+            <div class="setting-item">
+                <label>Amazon Referral Fee (%)</label>
+                <input type="number" id="referralFee" value="15" step="0.5" min="0" max="100">
+            </div>
+            <div class="setting-item">
+                <label>Min Profit Margin (%)</label>
+                <input type="number" id="minProfit" value="30" step="5" min="0">
+            </div>
+            <div class="setting-item">
+                <label>Max Acceptable Rank</label>
+                <input type="number" id="maxRank" value="50000" step="1000" min="0">
+            </div>
+        </div>
+    </div>
+
+    <div class="results" id="results">
+        <div class="stats" id="stats"></div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Products</button>
+            <button class="filter-btn" data-filter="profitable">High Profit Only</button>
+            <button class="filter-btn" data-filter="low-comp">Low Competition</button>
+            <button class="filter-btn" data-filter="recommended">Recommended</button>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <button class="btn" id="exportBtn">📥 Export Results to CSV</button>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table id="resultsTable"></table>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script>
+    // Fetch products from Flask endpoint
+    let productsData = [];
+    fetch('/get_products')
+        .then(response => response.json())
+        .then(data => {
+            productsData = data;
+            analyzeProducts();
+        });
+</script>
+</body>
+</html>
