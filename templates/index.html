@@ -1,70 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Euro Lotus → Amazon Profit Analyzer</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Euro Lotus → Amazon Profit Analyzer</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-<div class="container">
-    <div class="header">
-        <h1>📊 Euro Lotus → Amazon Profit Analyzer</h1>
-        <p>Analyzing CSV from uploads folder</p>
+<body class="bg-light">
+  <div class="container my-5 py-4 bg-white shadow rounded-4">
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <h1 class="fw-bold mb-2">📊 Euro Lotus → Amazon Profit Analyzer</h1>
+      <p class="text-muted">Welcome, {{ username }}</p>
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-danger btn-sm mt-2">Logout</a>
     </div>
 
-    <div class="settings">
-        <h3>⚙️ Settings & Costs</h3>
-        <div class="settings-grid">
-            <div class="setting-item">
-                <label>Shipping Cost (€)</label>
-                <input type="number" id="shippingCost" value="3.5" step="0.1" min="0">
-            </div>
-            <div class="setting-item">
-                <label>Amazon Referral Fee (%)</label>
-                <input type="number" id="referralFee" value="15" step="0.5" min="0" max="100">
-            </div>
-            <div class="setting-item">
-                <label>Min Profit Margin (%)</label>
-                <input type="number" id="minProfit" value="30" step="5" min="0">
-            </div>
-            <div class="setting-item">
-                <label>Max Acceptable Rank</label>
-                <input type="number" id="maxRank" value="50000" step="1000" min="0">
-            </div>
+    <!-- Settings -->
+    <div class="mb-4">
+      <h4 class="fw-semibold mb-3"><i class="bi bi-gear"></i> Settings & Costs</h4>
+      <div class="row g-3 setting-item">
+        <div class="col-md-3">
+          <label class="form-label">Shipping Cost (€)</label>
+          <input type="number" id="shippingCost" class="form-control" value="3.5" step="0.1" min="0">
         </div>
+        <div class="col-md-3">
+          <label class="form-label">Amazon Referral Fee (%)</label>
+          <input type="number" id="referralFee" class="form-control" value="15" step="0.5" min="0" max="100">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Min Profit Margin (%)</label>
+          <input type="number" id="minProfit" class="form-control" value="30" step="5" min="0">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Max Acceptable Rank</label>
+          <input type="number" id="maxRank" class="form-control" value="50000" step="1000" min="0">
+        </div>
+      </div>
     </div>
 
-    <div class="results" id="results">
-        <div class="stats" id="stats"></div>
-
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">All Products</button>
-            <button class="filter-btn" data-filter="profitable">High Profit Only</button>
-            <button class="filter-btn" data-filter="low-comp">Low Competition</button>
-            <button class="filter-btn" data-filter="recommended">Recommended</button>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <button class="btn" id="exportBtn">📥 Export Results to CSV</button>
-        </div>
-
-        <div style="overflow-x: auto;">
-            <table id="resultsTable"></table>
-        </div>
+    <!-- Sorting Controls -->
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      <label class="fw-semibold me-2"><i class="bi bi-sort-alpha-down"></i> Sort by:</label>
+      <select id="sortField" class="form-select form-select-sm" style="width:180px;">
+        <option value="">None</option>
+        <option value="product_name">Product Name</option>
+        <option value="amazon_price">Amazon Price</option>
+        <option value="eurolotus_price">EuroLotus Price</option>
+        <option value="netProfit">Net Profit</option>
+        <option value="profitMargin">Profit Margin</option>
+        <option value="roi">ROI</option>
+        <option value="amazon_rank">Sales Rank</option>
+      </select>
+      <button id="sortAsc" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-sort-numeric-down"></i> Asc
+      </button>
+      <button id="sortDesc" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-sort-numeric-up-alt"></i> Desc
+      </button>
+      <button class="btn btn-primary ms-auto" id="exportBtn">
+        <i class="bi bi-download"></i> Export CSV
+      </button>
     </div>
-</div>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-<script>
-    // Fetch products from Flask endpoint
+    <!-- Results Table -->
+    <div style="overflow-x:auto;">
+      <table id="resultsTable" class="table table-striped table-hover align-middle"></table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
     let productsData = [];
     fetch('/get_products')
-        .then(response => response.json())
-        .then(data => {
-            productsData = data;
-            analyzeProducts();
-        });
-</script>
+      .then(res => res.json())
+      .then(data => {
+        productsData = data;
+        analyzeProducts();
+      });
+  </script>
 </body>
 </html>

@@ -32,7 +32,6 @@ function analyzeProducts() {
         const netProfit = amazonPrice - totalCost - amazonFee - fbaFee;
         const profitMargin = amazonPrice ? (netProfit / amazonPrice) * 100 : 0;
 
-        // Competition calculation
         const sellers = parseInt(product.amazon_sellers) || 0;
         const fba = parseInt(product.fba_sellers) || 0;
         const fbaPercent = sellers ? (fba / sellers) * 100 : 0;
@@ -40,7 +39,6 @@ function analyzeProducts() {
         if (fbaPercent > 70 || sellers > 10) competition = 'High';
         else if (fbaPercent > 40 || sellers > 5) competition = 'Medium';
 
-        // Recommendation
         let recommendation = '⚡ Consider';
         const rank = parseInt(product.amazon_rank) || 999999;
         if (profitMargin >= minProfit && rank <= maxRank && competition === 'Low') recommendation = '✅ Highly Recommended';
@@ -57,8 +55,7 @@ function analyzeProducts() {
             profitMargin: profitMargin.toFixed(1),
             roi: totalCost ? ((netProfit / totalCost) * 100).toFixed(1) : 0,
             competition,
-            recommendation,
-            profitLevel: profitMargin >= 40 ? 'High' : profitMargin >= 25 ? 'Medium' : 'Low'
+            recommendation
         };
     });
 
@@ -66,11 +63,11 @@ function analyzeProducts() {
     displayResults();
 }
 
-// --- Display table
+// --- Display results
 function displayResults() {
     const table = document.getElementById('resultsTable');
     let html = `
-        <thead>
+        <thead class="table-primary">
             <tr>
                 <th>Product</th>
                 <th>EuroLotus Price</th>
@@ -90,17 +87,30 @@ function displayResults() {
 
     filteredData.forEach(p => {
         const a = p.analysis;
+        const netProfit = parseFloat(a.netProfit);
+        const roi = parseFloat(a.roi);
+        const rec = a.recommendation;
+
+        let rowClass = '';
+        if (netProfit < 0 || rec.includes('Low Profit')) {
+            rowClass = 'table-danger';
+        } else if (rec.includes('Highly Recommended') || rec.includes('Recommended') || roi >= 50) {
+            rowClass = 'table-success';
+        } else if (rec.includes('Slow') || rec.includes('High Competition') || roi >= 20) {
+            rowClass = 'table-warning';
+        }
+
         html += `
-            <tr>
+            <tr class="${rowClass}">
                 <td><a href="${p.amazon_url}" target="_blank">${p.product_name}</a></td>
-                <td>€${p.eurolotus_price}</td>
-                <td>€${p.amazon_price}</td>
+                <td>€${p.eurolotus_price || '-'}</td>
+                <td>€${p.amazon_price || '-'}</td>
                 <td>€${a.totalCost}</td>
-                <td>€${(parseFloat(a.amazonFee)+parseFloat(a.fbaFee)).toFixed(2)}</td>
+                <td>€${(parseFloat(a.amazonFee) + parseFloat(a.fbaFee)).toFixed(2)}</td>
                 <td>€${a.netProfit}</td>
                 <td>${a.profitMargin}%</td>
                 <td>${a.roi}</td>
-                <td>${p.amazon_rank}</td>
+                <td>${p.amazon_rank || '-'}</td>
                 <td>${a.competition}</td>
                 <td>${a.recommendation}</td>
             </tr>
@@ -109,22 +119,85 @@ function displayResults() {
 
     html += '</tbody>';
     table.innerHTML = html;
+
+    // Re-apply last sort automatically
+    const lastSort = JSON.parse(localStorage.getItem('sortState'));
+    if (lastSort && lastSort.field) {
+        applyStoredSort(lastSort.field, lastSort.order, false);
+    }
 }
 
-// --- Filters
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+// --- Sort with persistence
+document.getElementById('sortAsc').addEventListener('click', () => sortData('asc'));
+document.getElementById('sortDesc').addEventListener('click', () => sortData('desc'));
 
-        const filter = btn.dataset.filter;
-        if(filter==='all') filteredData = [...productsData];
-        else if(filter==='profitable') filteredData = productsData.filter(p => parseFloat(p.analysis.profitMargin)>=40);
-        else if(filter==='low-comp') filteredData = productsData.filter(p => p.analysis.competition==='Low');
-        else if(filter==='recommended') filteredData = productsData.filter(p => p.analysis.recommendation.includes('Recommended'));
+function sortData(order = 'asc') {
+    const key = document.getElementById('sortField').value;
+    if (!key) return;
 
-        displayResults();
+    localStorage.setItem('sortState', JSON.stringify({ field: key, order }));
+
+    filteredData.sort((a, b) => {
+        let valA, valB;
+        if (a.analysis && a.analysis[key] !== undefined) {
+            valA = a.analysis[key];
+            valB = b.analysis[key];
+        } else {
+            valA = a[key];
+            valB = b[key];
+        }
+
+        const numA = parseFloat(valA);
+        const numB = parseFloat(valB);
+
+        if (!isNaN(numA) && !isNaN(numB)) {
+            return order === 'asc' ? numA - numB : numB - numA;
+        }
+        return order === 'asc'
+            ? String(valA).localeCompare(String(valB))
+            : String(valB).localeCompare(String(valA));
     });
+
+    displayResults();
+    document.getElementById('sortAsc').classList.toggle('btn-primary', order === 'asc');
+    document.getElementById('sortDesc').classList.toggle('btn-primary', order === 'desc');
+}
+
+// --- Reapply saved sorting (used internally)
+function applyStoredSort(key, order, display = true) {
+    if (!key) return;
+    const sortField = document.getElementById('sortField');
+    sortField.value = key;
+    filteredData.sort((a, b) => {
+        let valA, valB;
+        if (a.analysis && a.analysis[key] !== undefined) {
+            valA = a.analysis[key];
+            valB = b.analysis[key];
+        } else {
+            valA = a[key];
+            valB = b[key];
+        }
+        const numA = parseFloat(valA);
+        const numB = parseFloat(valB);
+        if (!isNaN(numA) && !isNaN(numB)) {
+            return order === 'asc' ? numA - numB : numB - numA;
+        }
+        return order === 'asc'
+            ? String(valA).localeCompare(String(valB))
+            : String(valB).localeCompare(String(valA));
+    });
+    if (display) displayResults();
+    document.getElementById('sortAsc').classList.toggle('btn-primary', order === 'asc');
+    document.getElementById('sortDesc').classList.toggle('btn-primary', order === 'desc');
+}
+
+// --- Apply saved sort on load
+window.addEventListener('DOMContentLoaded', () => {
+    const lastSort = JSON.parse(localStorage.getItem('sortState'));
+    if (lastSort && lastSort.field) {
+        document.getElementById('sortField').value = lastSort.field;
+        applyStoredSort(lastSort.field, lastSort.order);
+    }
 });
 
 // --- Update analysis when settings change
@@ -139,7 +212,7 @@ document.getElementById('exportBtn').addEventListener('click', () => {
         const a = p.analysis;
         csv += `"${p.product_name}",${p.eurolotus_price},${p.amazon_price},${a.totalCost},${a.amazonFee},${a.fbaFee},${a.netProfit},${a.profitMargin},${a.roi},${p.amazon_rank},${a.competition},"${a.recommendation}","${p.amazon_url}"\n`;
     });
-    const blob = new Blob([csv], {type:'text/csv'});
+    const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

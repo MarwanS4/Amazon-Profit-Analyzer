@@ -1,0 +1,119 @@
+/* === GLOBAL === */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #222;
+}
+
+/* === AUTH CARD === */
+.auth-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 45px 50px;
+  width: 100%;
+  max-width: 380px;
+  color: #1e293b;
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.15),
+    0 0 25px rgba(59, 130, 246, 0.2),
+    0 0 10px rgba(99, 102, 241, 0.15);
+  animation: fadeIn 0.5s ease;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === HEADINGS === */
+.auth-card h2 {
+  text-align: center;
+  font-weight: 700;
+  color: #1d4ed8;
+  margin-bottom: 25px;
+  letter-spacing: 0.5px;
+}
+
+/* === INPUTS === */
+.form-label {
+  font-weight: 500;
+  color: #334155;
+}
+
+.form-control {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.25s ease;
+}
+
+.form-control:focus {
+  background-color: #fff;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.35);
+}
+
+/* === BUTTONS === */
+.btn-primary {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 0;
+  font-weight: 600;
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
+}
+
+/* === FOOTER LINKS === */
+.auth-footer {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.auth-footer a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* === ALERTS === */
+.alert {
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+/* === SUBTLE GLOW (optional aesthetic) === */
+/* .auth-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(120deg, rgba(99,102,241,0.4), rgba(59,130,246,0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none; /* allows clicks & typing again */ /*
+}
+*/
