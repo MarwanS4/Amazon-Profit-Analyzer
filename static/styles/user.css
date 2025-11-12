@@ -1,0 +1,53 @@
+/* Navbar styling */
+.main-navbar {
+  background: linear-gradient(90deg, #7b5fff, #764ba2);
+  padding: 0.6rem 1rem;
+}
+
+.navbar-brand {
+  font-size: 1rem;
+  color: #fff !important;
+}
+
+.navbar .dropdown-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  padding: 6px 12px;
+}
+
+.navbar .dropdown-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Submenu */
+.subnav {
+  background: #f7f6ff;
+  border-bottom: 1px solid #e3e0ff;
+}
+
+.subnav .nav-link {
+  color: #4b4a65;
+  font-weight: 500;
+  padding: 12px 20px;
+  transition: 0.2s;
+}
+
+.subnav .nav-link.active,
+.subnav .nav-link:hover {
+  color: #5a32f1;
+  border-bottom: 3px solid #5a32f1;
+}
+
+/* Content */
+.card {
+  border-radius: 12px;
+}
+
+.footer a {
+  color: #6c63ff;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

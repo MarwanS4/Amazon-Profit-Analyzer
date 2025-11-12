@@ -1,0 +1,32 @@
+/* === STATIC PURPLE NAVBAR (UNIVERSAL FOR LIGHT + DARK) === */
+.navbar {
+  background: linear-gradient(90deg, #7b5fff, #764ba2) !important;
+  padding: 0.6rem 1rem;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+/* Brand text */
+.navbar-brand {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff !important;
+}
+
+/* Admin dropdown button */
+.navbar .dropdown-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50px;
+  padding: 6px 12px;
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.25s ease, transform 0.15s ease;
+}
+
+.navbar .dropdown-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* === DROPDOWN MENU === */

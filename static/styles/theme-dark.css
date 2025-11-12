@@ -1,0 +1,178 @@
+/* Dark Theme */
+body[data-theme='dark'] {
+  background: #121212;  /* Darker background for comfort */
+  color: #E0E0E0;        /* Light grey text for softer reading */
+}
+
+/* Container */
+body[data-theme='dark'] .container,
+body[data-theme='dark'] .user-card {
+  background: #1F1F1F;   /* Slightly lighter than the body */
+  color: #e1e1e1;         /* Soft grey text for readability */
+  border: 1px solid #444; /* Light border to separate content */
+}
+
+/* Navbar */
+body[data-theme='dark'] .navbar {
+  background: #333;      /* Soft dark background */
+  box-shadow: none;      /* No strong shadows */
+}
+
+/* Buttons */
+body[data-theme='dark'] .btn {
+  background-color: #5d8462; /* Softer accent color */
+  color: #E0E0E0;
+  border: 1px solid #6E7A7F; /* Soft border for buttons */
+}
+
+/* Table Header */
+body[data-theme='dark'] .table thead {
+  background: #2A2A2A;   /* Darker header */
+  color: #A0A0A0;         /* Light grey text */
+}
+
+/* Table Body */
+body[data-theme='dark'] .table tbody tr {
+  background: #2B2B2B;   /* Even darker background for rows */
+}
+
+body[data-theme='dark'] .table tbody tr:hover {
+  background: #3A3A3A;   /* Subtle hover effect */
+  box-shadow: none;
+}
+
+/* Footer */
+body[data-theme='dark'] footer {
+  background: #1F1F1F;
+  color: #9E9E9E;
+}
+
+/* Links */
+body[data-theme='dark'] a {
+  color: #7955D1;   /* Muted link color */
+}
+
+body[data-theme='dark'] a:hover {
+  color: #A0A0A0;  /* Slightly lighter hover color */
+}
+
+/* === ADMIN BUTTON (Navbar Dropdown) === */
+body[data-theme='dark'] .navbar .dropdown-toggle {
+  background-color: #855EB0 !important; /* Soft purple admin button */
+  border-color: #855EB0 !important;
+  color: #fff !important;
+}
+
+body[data-theme='dark'] .navbar .dropdown-toggle:hover {
+  background-color: #9472bd !important; /* Slightly lighter on hover */
+  border-color: #9472bd !important;
+}
+
+body[data-theme='dark'] .navbar .dropdown-toggle {
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+}
+
+body[data-theme='dark'] .navbar .dropdown-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* === Smooth Button Animations (for all buttons in dark mode) === */
+body[data-theme='dark'] .btn {
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+}
+
+body[data-theme='dark'] .btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+/* === Success Buttons (green) === */
+body[data-theme='dark'] .btn-success {
+  background-color: #5d8462;
+  border-color: #5d8462;
+  color: #E0E0E0;
+}
+
+body[data-theme='dark'] .btn-success:hover {
+  background-color: #6d9773;
+  border-color: #6d9773;
+}
+
+/* === Primary Buttons (blue/purple actions like Upgrade Plan) === */
+body[data-theme='dark'] .btn-primary {
+  background-color: #6c63ff !important;  /* nice muted purple-blue */
+  border-color: #6c63ff !important;
+  color: #fff !important;
+}
+
+body[data-theme='dark'] .btn-primary:hover {
+  background-color: #7a72ff !important;
+  border-color: #7a72ff !important;
+  transform: translateY(-1px);
+}
+
+/* === Danger Buttons (if any) === */
+body[data-theme='dark'] .btn-danger {
+  background-color: #b85c5c;
+  border-color: #b85c5c;
+  color: #fff;
+}
+
+body[data-theme='dark'] .btn-danger:hover {
+  background-color: #c66a6a;
+  border-color: #c66a6a;
+}
+
+/* === Save Button (if you use .btn-success or .btn-outline-success etc.) === */
+body[data-theme='dark'] #savePreferences,
+body[data-theme='dark'] .btn-outline-success {
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+}
+
+body[data-theme='dark'] #savePreferences:hover,
+body[data-theme='dark'] .btn-outline-success:hover {
+  transform: translateY(-1px);
+  background-color: #6d9773;
+  border-color: #6d9773;
+  color: #fff;
+}
+
+
+/* === TEXT COLOR CONTROL FOR LIGHT & DARK THEMES === */
+
+/* Light Mode (default) */
+body[data-theme='light'] h1,
+body[data-theme='light'] h2,
+body[data-theme='light'] h3,
+body[data-theme='light'] h4,
+body[data-theme='light'] h5,
+body[data-theme='light'] h6,
+body[data-theme='light'] .header h2,
+body[data-theme='light'] .fw-semibold,
+body[data-theme='light'] .fw-bold {
+  color: #111 !important; /* strong black for light mode */
+}
+
+/* Dark Mode */
+body[data-theme='dark'] h1,
+body[data-theme='dark'] h2,
+body[data-theme='dark'] h3,
+body[data-theme='dark'] h4,
+body[data-theme='dark'] h5,
+body[data-theme='dark'] h6,
+body[data-theme='dark'] .header h2,
+body[data-theme='dark'] .fw-semibold,
+body[data-theme='dark'] .fw-bold {
+  color: #f2f2f2 !important; /* soft white for dark mode */
+}
+
+
+/* Light Mode */
+body[data-theme='light'] .navbar .navbar-brand {
+  color: #f2f2f2 !important;
+}
+
+/* Dark Mode */
+body[data-theme='dark'] .navbar .navbar-brand {
+  color: #f2f2f2 !important;
+}

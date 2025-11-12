@@ -14,10 +14,29 @@ def init_db():
     c.execute('''CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        theme TEXT DEFAULT 'light'
     )''')
     conn.commit()
     conn.close()
+
+
+def update_user_theme(user_id, theme):
+    """Update the saved theme for a specific user"""
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("UPDATE users SET theme=? WHERE id=?", (theme, user_id))
+    conn.commit()
+    conn.close()
+
+def get_user_theme(user_id):
+    """Get the saved theme for a specific user"""
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("SELECT theme FROM users WHERE id=?", (user_id,))
+    row = c.fetchone()
+    conn.close()
+    return row[0] if row and row[0] else 'light'
 
 
 # ---------------- USER MODEL ----------------
@@ -93,3 +112,13 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+def ensure_theme_column():
+    """Add theme column to users table if missing"""
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("PRAGMA table_info(users)")
+    columns = [col[1] for col in c.fetchall()]
+    if "theme" not in columns:
+        c.execute("ALTER TABLE users ADD COLUMN theme TEXT DEFAULT 'light'")
+    conn.commit()
+    conn.close()
