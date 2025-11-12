@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin
-import sqlite3
+import sqlite3, os
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 bcrypt = Bcrypt()
@@ -9,16 +9,31 @@ DB_FILE = 'users.db'
 
 # ---------------- DATABASE ----------------
 def init_db():
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        theme TEXT DEFAULT 'light'
-    )''')
-    conn.commit()
-    conn.close()
+    db_path = "users.db"
+    try:
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                email TEXT UNIQUE,
+                email_verified INTEGER DEFAULT 0,
+                verification_token TEXT,
+                theme TEXT DEFAULT 'light'
+            )
+        """)
+        conn.commit()
+        conn.close()
+    except sqlite3.DatabaseError as e:
+        print("⚠️ Database is corrupted. Rebuilding clean version...")
+        try:
+            conn.close()
+        except: pass
+        if os.path.exists(db_path):
+            os.remove(db_path)
+        init_db()
 
 
 def update_user_theme(user_id, theme):
